@@ -1,8 +1,7 @@
 import React from "react";
-import Image from "next/image";
 import { FaArrowRight } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
-export default function () {
+export default function Slide () {
   return (
     <>
 

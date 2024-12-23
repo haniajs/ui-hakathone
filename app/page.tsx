@@ -1,6 +1,5 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import SecondLast from "@/components/Secondlast";
 import Link from "next/link";
 import { FaShareNodes } from "react-icons/fa6";
 import { CiHeart } from "react-icons/ci";
