@@ -50,7 +50,7 @@ export default function Navbar() {
             <FaRegHeart className="h-6 w-6"/>
             </Link>
 
-            <Link href={"/card"}>
+            <Link href={"/cart"}>
             <MdOutlineShoppingCart className="h-6 w-6"/>
             </Link>
         </div>
@@ -63,7 +63,7 @@ export default function Navbar() {
 
   {/*  For Mobile screen */}
 
-  <nav className="h-[90px] p-4 md:hidden">
+  <nav className="h-[90px] p-4 md:hidden overflow-hidden">
       {/* Navbar Container */}
       <div className="flex justify-between items-center">
         {/* Logo or Brand */}
@@ -113,7 +113,7 @@ export default function Navbar() {
           <Link href="/contact" className="text-black font-medium border-b border-black text-[16px] leading-[24px] hover:bg-[#F5F5F5] hover:border-b-2 p-2">
             Contact
           </Link>
-          <Link href="/card" className="text-black font-medium border-b border-black text-[16px] leading-[24px] hover:bg-[#F5F5F5] hover:border-b-2 p-2">
+          <Link href="/cart" className="text-black font-medium border-b border-black text-[16px] leading-[24px] hover:bg-[#F5F5F5] hover:border-b-2 p-2">
             Card
           </Link>
 

@@ -70,8 +70,8 @@ export default function ProductSecond () {
 
 
                 <div className="flex mt-10 gap-x-4 justify-center items-center">
-                    <button className="w-[87px] h-[30px] rounded-[50px] border border-black text-center font-normal text-[12px] leading-[18px]"><Link href={"/card"}>Cart</Link></button>
-                    <button className="w-[118px] h-[30px] rounded-[50px] border border-black text-center font-normal text-[12px] leading-[18px]"><Link href={"/checkout"}>Checkout</Link></button>
+                    <button className="w-[87px] h-[30px] rounded-[50px] border border-black text-center font-normal text-[12px] leading-[18px]"><Link href={"/cart"}>Cart</Link></button>
+                    <button className="w-[118px] h-[30px] rounded-[50px] border border-black text-center font-normal text-[12px] leading-[18px]"><Link href={"/checkouts"}>Checkout</Link></button>
                     <button className="w-[135px] h-[30px] rounded-[50px] border border-black text-center font-normal text-[12px] leading-[18px]"><Link href={"/comparison"}>Comparison</Link></button>
                 </div>
             </div>
@@ -141,8 +141,8 @@ export default function ProductSecond () {
 
 
                 <div className="flex mt-10 gap-x-4 justify-center items-center">
-                    <button className="w-[87px] h-[30px] rounded-[50px] border border-black text-center font-normal text-[12px] leading-[18px]"><Link href={"/card"}>Cart</Link></button>
-                    <button className="w-[118px] h-[30px] rounded-[50px] border border-black text-center font-normal text-[12px] leading-[18px]"><Link href={"/checkout"}>Checkout</Link></button>
+                    <button className="w-[87px] h-[30px] rounded-[50px] border border-black text-center font-normal text-[12px] leading-[18px]"><Link href={"/cart"}>Cart</Link></button>
+                    <button className="w-[118px] h-[30px] rounded-[50px] border border-black text-center font-normal text-[12px] leading-[18px]"><Link href={"/checkouts"}>Checkout</Link></button>
                     <button className="w-[135px] h-[30px] rounded-[50px] border border-black text-center font-normal text-[12px] leading-[18px]"><Link href={"/comparison"}>Comparison</Link></button>
                 </div>
             </div>

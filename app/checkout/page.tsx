@@ -171,7 +171,7 @@ export default function Checkout () {
 
         {/* For mobile screen*/}
 
-        <div className="md:hidden sm:block">
+        <div className="md:hidden sm:block overflow-hidden">
             <div className="mt-16">
             <h1 className="font-semibold text-[36px] leading-[54px]">Billing details</h1>
 

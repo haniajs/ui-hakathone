@@ -44,7 +44,7 @@ export default function Footer () {
 
           {/*  For Mobile screen */}
 
-          <div className="md:hidden">
+          <div className="md:hidden overflow-hidden">
           <div className="border-b-2 p-6">
           <h1 className="font-bold text-[24px] leading-[36px] text-center mt-4">Funiro.</h1>
         <p className="font-normal text-[16px] leading-[24px] text-[#9F9F9F] mt-6 text-center">400 University Drive Suite 200 Coral Gables, FL 33134 USA</p>

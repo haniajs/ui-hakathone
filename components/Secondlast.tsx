@@ -45,9 +45,9 @@ export default function SecondLast () {
 
 
 
-        {/* for large screen */}
+        {/* for small screen */}
 
-        <div className="w-[428px] h-[840px] bg-[#FAF3EA] items-center md:hidden sm:block">
+        <div className="w-[427px] h-[840px] bg-[#FAF3EA] items-center md:hidden sm:block overflow-hidden">
             <div className="pt-12">
             <Image src={"/Images/sl1.png"} alt="sl1" width={100} height={50} className="h-20 w-14 ml-[190px]"/>
                     <h1 className="font-semibold text-[25px] leading-[37.5px] text-center mt-2">High Quality</h1>

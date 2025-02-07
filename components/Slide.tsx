@@ -50,7 +50,7 @@ export default function Slide () {
 
        {/* For mobile screen */}
 
-       <div className="md:hidden sm:block">
+       <div className="md:hidden sm:block overflow-hidden">
         <div className="flex flex-col bg-[#FCF8F3] w-full h-[2000px]">
 
             <div className="flex-1 justify-center items-center mt-[200px]">

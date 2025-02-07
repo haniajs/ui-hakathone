@@ -1,14 +1,78 @@
+"use client"
 import Navbar from "@/components/Navbar";
 import { IoIosArrowForward } from "react-icons/io";
-import { FaShareNodes } from "react-icons/fa6";
-import { CiHeart } from "react-icons/ci";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import SecondLast from "@/components/Secondlast";
 import Footer from "@/components/Footer";
 
+
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import { allProducts } from "@/sanity/lib/queries";
+import { Product } from "@/types/products";
+import  { useEffect, useState } from "react";
+import { addToCart } from "../actions/actions";
+import Swal from "sweetalert2";
+import SearchAndFilter from "@/components/SearchAndFilter";
+
+
 export default function Shop () {
+
+
+  const [product, setProduct] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+
+   // Pagination states
+   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8); // Display 12 products per page
+
+
+  useEffect(() => {
+      async function fetchproduct() {
+          const fetchedProduct : Product[] = await client.fetch(allProducts)
+          setProduct(fetchedProduct)
+          setFilteredProducts(fetchedProduct); // Initialize with all products
+      }
+      fetchproduct()
+  }, []) 
+ 
+
+
+
+//  Add to cart work
+
+const handleAddToCart = (e: React.MouseEvent, product: Product) => {
+    e.preventDefault()
+    Swal.fire({
+        position : "top-right",
+        icon : "success",
+        title : `${product.title} added to cart`,
+        showConfirmButton : false,
+        timer : 1000
+    })
+    addToCart(product)
+}
+// add to cart work close
+
+  // Calculate the products to show based on the current page
+  const indexOfLastProduct = currentPage * itemsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct); // This line now calculates the correct slice of products
+
+  // Pagination logic
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // Number of pages
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(filteredProducts.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+ 
+
+
     return (
         <>
         {/* Navbar open */}
@@ -50,11 +114,11 @@ export default function Shop () {
         {/* Hero section close*/}
 
 
-        {/* Subhero section open*/}
+   {/* Subhero section open*/}
 
         {/* For large screen*/}
 
-        <div className="sm:hidden md:block">
+      {/*  <div className="sm:hidden md:block">
             <div className="w-full bg-[#F9F1E7] h-[100px] flex justify-between">
                 <div className="flex ml-[80px] items-center gap-x-4">
                     <Image src={"/Images/icon1.png"} alt="icon1" height={100} width={100} className="h-[25px] w-[25px]"/>
@@ -71,11 +135,11 @@ export default function Shop () {
                     <input type="text" placeholder="Default" className="w-[188px] h-[55px] text-center"/>
                 </div>
             </div>
-        </div>
+        </div> */}
 
         {/* For mobile screen*/}
 
-        <div className="md:hidden sm:block">
+      {/*  <div className="md:hidden sm:block overflow-hidden">
             <div className="w-[428px] bg-[#F9F1E7] h-[100px] flex justify-center border-b-2 mt-1">
                 <div className="flex items-center gap-x-4">
                 <Image src={"/Images/icon1.png"} alt="icon1" height={100} width={100} className="h-[25px] w-[25px]"/>
@@ -94,534 +158,97 @@ export default function Shop () {
                     <input type="text" placeholder="Default" className="w-[188px] h-[55px] text-center"/>
                 </div>
             </div>
-        </div>
+        </div>  */}
 
         {/* Subhero section close*/}
-
-
-        {/* Main section open*/}
-
-        {/* first section for large screen*/}
-
-        <div className="sm:hidden md:block">
-            <div>
-            <div className="flex gap-x-2">
-                <div className="flex-1 ml-[40px] mt-[60px]">
-
-                    <div className="bg-[url('/Images/shop1.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price1.png"} alt="price1" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Syltherine</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 2.500.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 3.500.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px]">
-                    <div className="bg-[url('/Images/shop2a.png')] w-[285px] h-[446px]">
-                    <div className="bg-[url('/Images/shop2ab.png')] w-[285px] h-[446px]">
-                    <Link href={"/card"}><button className="font-semibold text-[16px] leading-[24px] text-[#E89F71] h-[48px] w-[202px] text-center bg-white mt-[170px] ml-10">Add to cart</button></Link>
-                    <div className="flex gap-x-2 mt-4 ml-4">
-                    <FaShareNodes className="w-4 h-4 text-white"/>
-                    <h1 className="font-semibold text-[16px] leading-[24px] text-white">Share</h1>
-                    <Image src={"/Images/compare.png"} alt="compare" height={100} width={100} className="w-4 h-4 text-white"/>
-                    <h1 className="font-semibold text-[16px] leading-[24px] text-white">Compare</h1>
-                    <CiHeart className="w-4 h-4 text-white"/>
-                    <h1 className="font-semibold text-[16px] leading-[24px] text-white">Like</h1>
-                    </div>
-                    </div>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px]">
-                <div className="bg-[url('/Images/shop3.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price2.png"} alt="price2" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Lolito</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Luxury big sofa</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 7.000.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 14.000.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px] mr-[40px]">
-                <div className="bg-[url('/Images/shop4.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price3.png"} alt="price3" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Respira</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Outdoor bar table and stool</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 500.000</h1>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-
-        {/* first section for mobile  screen*/}
-
-
-        <div className="md:hidden sm:block">
-            <div>
-                <div className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop1.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price1.png"} alt="price1" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Syltherine</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 2.500.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 3.500.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop2a.png')] w-[285px] h-[446px]">
-                    <div className="bg-[url('/Images/shop2ab.png')] w-[285px] h-[446px]">
-                    <Link href={"/card"}><button className="font-semibold text-[16px] leading-[24px] text-[#E89F71] h-[48px] w-[202px] text-center bg-white mt-[170px] ml-10">Add to cart</button></Link>
-                    <div className="flex gap-x-2 mt-4 ml-4">
-                    <FaShareNodes className="w-4 h-4 text-white"/>
-                    <h1 className="font-semibold text-[16px] leading-[24px] text-white">Share</h1>
-                    <Image src={"/Images/compare.png"} alt="compare" height={100} width={100} className="w-4 h-4 text-white"/>
-                    <h1 className="font-semibold text-[16px] leading-[24px] text-white">Compare</h1>
-                    <CiHeart className="w-4 h-4 text-white"/>
-                    <h1 className="font-semibold text-[16px] leading-[24px] text-white">Like</h1>
-                    </div>
-                    </div>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop3.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price2.png"} alt="price2" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Lolito</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Luxury big sofa</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 7.000.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 14.000.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop4.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price3.png"} alt="price3" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Respira</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Outdoor bar table and stool</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 500.000</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        {/* Second section for large  screen*/}
-
-        <div className="sm:hidden md:block">
-            <div>
-            <div className="flex gap-x-2">
-                <div className="flex-1 ml-[40px] mt-[60px]">
-
-                    <div className="bg-[url('/Images/shop1.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price1.png"} alt="price1" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Syltherine</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 2.500.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 3.500.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px]">
-                <div className="bg-[url('/Images/shop2.png')] h-[301px] w-[285px]">
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Leviosa</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 2.500.000</h1>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px]">
-                <div className="bg-[url('/Images/shop3.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price2.png"} alt="price2" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Lolito</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Luxury big sofa</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 7.000.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 14.000.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px] mr-[40px]">
-                <div className="bg-[url('/Images/shop4.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price3.png"} alt="price3" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Respira</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Outdoor bar table and stool</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 500.000</h1>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-
-        {/* Second section for mobile  screen*/}
-
-        <div className="md:hidden sm:block">
-            <div>
-                <div className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop1.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price1.png"} alt="price1" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Syltherine</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 2.500.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 3.500.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop2.png')] h-[301px] w-[285px]">
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Leviosa</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 2.500.000</h1>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop3.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price2.png"} alt="price2" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Lolito</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Luxury big sofa</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 7.000.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 14.000.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop4.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price3.png"} alt="price3" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Respira</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Outdoor bar table and stool</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 500.000</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {/* Third section for large  screen*/}
-
-        <div className="sm:hidden md:block">
-            <div>
-            <div className="flex gap-x-2">
-                <div className="flex-1 ml-[40px] mt-[60px]">
-
-                    <div className="bg-[url('/Images/shop1.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price1.png"} alt="price1" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Syltherine</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 2.500.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 3.500.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px]">
-                <div className="bg-[url('/Images/shop2.png')] h-[301px] w-[285px]">
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Leviosa</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 2.500.000</h1>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px]">
-                <div className="bg-[url('/Images/shop3.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price2.png"} alt="price2" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Lolito</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Luxury big sofa</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 7.000.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 14.000.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px] mr-[40px]">
-                <div className="bg-[url('/Images/shop4.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price3.png"} alt="price3" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Respira</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Outdoor bar table and stool</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 500.000</h1>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-
-          {/* Third section for mobile  screen*/}
-
-          <div className="md:hidden sm:block">
-            <div>
-                <div className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop1.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price1.png"} alt="price1" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Syltherine</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 2.500.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 3.500.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop2.png')] h-[301px] w-[285px]">
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Leviosa</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 2.500.000</h1>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop3.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price2.png"} alt="price2" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Lolito</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Luxury big sofa</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 7.000.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 14.000.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop4.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price3.png"} alt="price3" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Respira</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Outdoor bar table and stool</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 500.000</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {/* Fourth section for large  screen*/}
-
-        <div className="sm:hidden md:block">
-            <div>
-            <div className="flex gap-x-2">
-                <div className="flex-1 ml-[40px] mt-[60px]">
-
-                    <div className="bg-[url('/Images/shop1.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price1.png"} alt="price1" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Syltherine</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 2.500.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 3.500.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px]">
-                <div className="bg-[url('/Images/shop2.png')] h-[301px] w-[285px]">
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Leviosa</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 2.500.000</h1>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px]">
-                <div className="bg-[url('/Images/shop3.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price2.png"} alt="price2" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Lolito</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Luxury big sofa</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 7.000.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 14.000.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div className="flex-1 mt-[60px] mr-[40px]">
-                <div className="bg-[url('/Images/shop4.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price3.png"} alt="price3" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Respira</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Outdoor bar table and stool</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 500.000</h1>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-
-        {/* Fourth section for mobile  screen*/}
-
-        <div className="md:hidden sm:block">
-            <div>
-                <div className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop1.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price1.png"} alt="price1" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Syltherine</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 2.500.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 3.500.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop2.png')] h-[301px] w-[285px]">
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Leviosa</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Stylish cafe chair</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 2.500.000</h1>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop3.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price2.png"} alt="price2" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Lolito</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Luxury big sofa</p>
-                      <div className="flex justify-between mt-2 ml-4 mr-4">
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A]">Rp 7.000.000</h1>
-                        <p className="font-normal text-[16px] leading-[24px] line-through text-[#B0B0B0]">Rp 14.000.000</p>
-                      </div>
-                    </div>
-                </div>
-
-                <div  className="mt-8 flex flex-col items-center">
-                <div className="bg-[url('/Images/shop4.png')] h-[301px] w-[285px]">
-                    <Image src={"/Images/price3.png"} alt="price3" height={100} width={100} className="h-[48px] w-[48px] pt-3 ml-[220px]"/>
-                    </div>
-
-                    <div className="bg-[#F4F5F7] h-[145px] w-[285px]">
-                      <h1 className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">Respira</h1>
-                      <p className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4">Outdoor bar table and stool</p>
-                        <h1 className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] pt-2 ml-4">Rp 500.000</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-         {/* Fifth section for large  screen*/}
-
-          <div className="sm:hidden md:block">
-         <div className="flex justify-center items-center gap-x-4 mt-[60px] mb-4">
-            <button className="font-normal text-[20px] leading-[30px] text-black bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white h-[60px] w-[60px] rounded-[10px]">1</button>
-            <button className="font-normal text-[20px] leading-[30px] text-black bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white h-[60px] w-[60px] rounded-[10px]">2</button>
-            <button className="font-normal text-[20px] leading-[30px] text-black bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white h-[60px] w-[60px] rounded-[10px]">3</button>
-            <button className="font-light text-[20px] leading-[30px] text-black bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white h-[60px] w-[98px] rounded-[10px]"><Link href={"/product"}>Next</Link></button>
-         </div>
-         </div>
-
-          {/* Fifth section for mobile  screen*/}
-
-          <div className="md:hidden sm:block">
-          <div className="flex justify-center items-center gap-x-4 mt-[60px] mb-4">
-            <button className="font-normal text-[20px] leading-[30px] text-black bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white h-[60px] w-[60px] rounded-[10px]">1</button>
-            <button className="font-normal text-[20px] leading-[30px] text-black bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white h-[60px] w-[60px] rounded-[10px]">2</button>
-            <button className="font-normal text-[20px] leading-[30px] text-black bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white h-[60px] w-[60px] rounded-[10px]">3</button>
-            <button className="font-light text-[20px] leading-[30px] text-black bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white h-[60px] w-[98px] rounded-[10px]"><Link href={"/product"}>Next</Link></button>
-         </div>
+        
+         {/* Subhero, Search and filter and pagination section open*/}
+        
+         <div className="filters-container">
+        <SearchAndFilter products={product} setFilteredProducts={setFilteredProducts} />
+      </div>
+
+      <div className="grid sm:grid-col-1 md:grid-cols-4">
+         {/* Filtered and Paginated Products */}
+        {currentProducts.map((product) => (
+          <div key={product._id} className="product-item ml-6 mr-6 sm:flex flex-col sm:justify-center sm:items-center md:w-[285px]">
+            <Link href={`/product/${product.slug.current}`}>
+                            {product.productImage && (
+                                <Image src={urlFor(product.productImage).url()} alt="image" width={200} height={200} className="h-[301px] w-[285px] mt-10"/>
+                            )}
+                             <div className="gap-b-10 sm:flex sm:justify-center sm:items-center">
+                            <div className="bg-[#F4F5F7] md:h-[280px] sm:h-[280px] sm:w-[285px]">
+                            <div className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">{product.title}</div><br/>
+                           <div className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4 line-clamp-2"> {product.description}</div><br/>
+                           <div className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] ml-4"><h1>Rp ${product.price}</h1>                          </div> <br/>
+                          <div>   {/* add to cart button start */}
+                            <button className="bg-[#B88E2F] text-white ml-[70px] font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg hover:scale-110 transition-transform duration-200 ease-in-out"
+                           onClick={(e) => handleAddToCart(e, product)}
+                           >
+                            Add To Cart
+                           </button></div>
+                         
+                           </div>
+                           </div>
+                         
+                           </Link>
           </div>
+        ))}
+      </div>
+      
+         {/* Subhero, Search and filter and pagination section close*/}
 
-           {/* Main section open*/}
+
+         {/* Main section open */}
+
+    {/*    <div className="grid sm:grid-col-1 md:grid-cols-4">
+                    {currentProducts.map((product) => (
+                        <div key={product._id} className="ml-6 mr-6 sm:flex flex-col sm:justify-center sm:items-center md:w-[285px]">
+                          <Link href={`/product/${product.slug.current}`}>
+                            {product.productImage && (
+                                <Image src={urlFor(product.productImage).url()} alt="image" width={200} height={200} className="h-[301px] w-[285px] mt-10"/>
+                            )}
+                            <div className="gap-b-10 sm:flex sm:justify-center sm:items-center">
+                            <div className="bg-[#F4F5F7] md:h-[280px] sm:h-[280px] sm:w-[285px]">
+                            <div className="font-semibold text-[24px] leading-[28.8px] pt-6 ml-4">{product.title}</div><br/>
+                           <div className="font-medium text-[16px] leading-[24px] text-[#898989] pt-2 ml-4 line-clamp-2"> {product.description}</div><br/>
+                           <div className="font-semibold  text-[20px] leading-[30px] text-[#3A3A3A] ml-4"><h1>Rp ${product.price}</h1>                          </div> <br/>
+                          <div> 
+
+                        
+                          <button className="bg-[#B88E2F] text-white ml-[70px] font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg hover:scale-110 transition-transform duration-200 ease-in-out"
+                           onClick={(e) => handleAddToCart(e, product)}
+                           >
+                            Add To Cart
+                           </button></div>
+                         
+                           </div>
+                           </div>
+                         
+                           </Link>
+                        </div>
+                    ))}
+                </div>   
+                */}
+                 {/* Main section close */}
+
+
+        {/* Pagination Controls open */}
+      <div className="flex justify-center items-center gap-x-4 mt-[60px] mb-4">
+        {pageNumbers.map((number) => (
+          <button
+            key={number}
+            onClick={() => paginate(number)}
+            className={`font-normal text-[20px] leading-[30px] text-black bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white h-[60px] w-[60px] rounded-[10px] ${
+              currentPage === number ? "bg-[#B88E2F] text-black" : ""
+            }`}
+          >
+            {number}
+          </button>
+        ))}
+      </div>
+      {/* Pagination Controls close */}
+        
 
             {/* Second last section  open*/}
             <SecondLast />
@@ -631,5 +258,6 @@ export default function Shop () {
              <Footer />
              {/* Footer  close*/}
         </>
-    )
+    );
 }
+

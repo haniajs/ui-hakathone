@@ -129,7 +129,7 @@ export default function Contact () {
 
 
          {/* For Mobile screen*/}
-         <div className="sm:block md:hidden">
+         <div className="sm:block md:hidden overflow-hidden">
             <div className="mt-[150px]">
                 <div>
                 <form action="">

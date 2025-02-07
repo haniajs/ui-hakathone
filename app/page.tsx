@@ -34,7 +34,7 @@ export default function Home() {
      </div>
      {/* For mobile screen */}
 
-     <div className="md:hidden sm:block">
+     <div className="md:hidden sm:block overflow-hidden">
       <div className="bg-[url('/Images/hero1.png')] w-[428px] h-[700px]">
       <div className="pt-[160px] pl-1">
       <div className="bg-[#FFF3E3] w-[420px] h-[443px] rounded-[10px] pt-10 pl-4">
@@ -80,7 +80,7 @@ export default function Home() {
 
       {/* For mobile screen */}
 
-      <div className="md:hidden sm:block">
+      <div className="md:hidden sm:block overflow-hidden">
       <div>
         <div className="mt-[60px]">
         <h1 className="font-bold text-[32px] leading-[48px] text-[#333333] text-center">Browse The Range</h1>

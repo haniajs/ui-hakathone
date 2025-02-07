@@ -111,7 +111,7 @@ export default function Card () {
                 </div>
             </div>
 
-            <div className="w-[428px] h-[400px] bg-[#F9F1E7] mt-6">
+            <div className="w-[427px] h-[400px] bg-[#F9F1E7] mt-6 overflow-hidden">
             <h1 className="font-semibold text-[32px] leading-[48px] text-center pt-[20px]">Cart Totals</h1>
                     <div className="flex mt-16 gap-x-20 ml-[80px]">
                         <h1 className="font-medium text-[16px] leading-[24px]">Subtotal</h1>
@@ -129,7 +129,7 @@ export default function Card () {
 
         {/* Second last section  open*/}
         <SecondLast />
-        {/* Second last section  open*/}
+        {/* Second last section  close*/}
 
         {/* Footer  open*/}
         <Footer />
